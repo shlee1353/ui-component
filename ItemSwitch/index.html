@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Item Switch</title>
+    <link rel="stylesheet" type="text/css" href="./style.css">
+  </head>
+  <body>
+    <div id="app">
+      <div class="content">
+        <ul class="content_list">
+          <!-- [DEV] dynamic items -->
+        </ul>
+      </div>
+    </div>
+  </body>
+  <script>
+    const contentList = document.querySelector('.content_list');
+
+    const data = [
+      'information 1',
+      'information 2',
+      'information 3',
+      'information 4',
+      'information 5',
+    ];
+
+    let newData = [...data];
+
+    function displayItemList(data) {
+      let itemList = '';
+
+      for (let i = 0; i < data.length; i++) {
+        itemList += `
+          <li class="content_item">
+            <div class="content_box">
+              <div class="box_left">
+                <button type="button" class="button" id="up">UP</button>
+                <button type="button" class="button" id="down">DOWN</button>
+              </div>
+              <div class="box_right">${data[i]}</div>
+            </div>
+          </li>
+        `
+        contentList.innerHTML = itemList;
+      }
+    }
+
+    displayItemList(newData);
+
+    const switchItems = [...document.querySelectorAll('.content_item')];
+    const boxLefts = [...document.querySelectorAll('.box_left')];
+    const buttons = document.querySelectorAll('.button');
+
+    function btnListener(e) {
+      switch(e.target.id) {
+        case 'up': // string, or number
+          getIndex(e, 'up');
+          break;
+        case 'down':
+          getIndex(e, 'down');
+          break;
+      }
+    }
+
+    function getIndex(e, type) {
+      const currentIndex = boxLefts.indexOf(e.target.parentElement);
+      
+      if (type === 'up') {
+        console.log(currentIndex, currentIndex - 1);
+      } else {
+        console.log(currentIndex, currentIndex + 1);
+      }
+    }
+
+    for (let i = 0; i< buttons.length; i++) {
+      buttons[i].addEventListener('click', btnListener);
+    }
+
+    // UP 버튼 현재 선택된 index의 바로 앞의(index - 1)와 교체
+    // DOWN 버튼 현재 선택된 index의 바로 뒤의(index + 1)와 교체
+
+    // 1. 배열의 맨앞/뒤에 위치한지 확인
+    // 맨앞(index === 0) & 맨뒤(index === 배열.length + 1)
+
+    // 2. css로 &:first-child, &:last-child 버튼을 비활성화 시켜서 이벤트를 중지할 수 있음
+
+    // 방법 1. 선택된 index 기준 앞/뒤로 묶음 -> 교체 -> 다시 추가
+    // 방법 2. 선택된 index를 기존 배열에서 제거 한 뒤 앞/뒤 index에 추가
+
+    const swapArrayElements = (a, x, y) => a[x] !== undefined && a[y] !== undefined && [
+      ...a.slice(0, x),
+      a[y],
+      ...a.slice(x+1, y),
+      a[x],
+      ...a.slice(y+1)
+    ] || a
+
+  </script>
+</html>
